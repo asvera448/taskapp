@@ -1,0 +1,843 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskApp - Mis tareas</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f3f4f8;
+    color: #292d3e;
+    min-height: 100vh;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* MENU LATERAL */
+
+.sidebar {
+    width: 235px;
+    background: #292d48;
+    color: white;
+    padding: 28px 18px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.logo span {
+    color: #a99af5;
+}
+
+.menu-title {
+    color: #aeb1c8;
+    font-size: 12px;
+    margin: 25px 10px 12px;
+    text-transform: uppercase;
+}
+
+.menu button {
+    width: 100%;
+    padding: 13px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: white;
+    text-align: left;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.menu button:hover,
+.menu button.active {
+    background: #494d70;
+}
+
+/* CONTENIDO */
+
+.content {
+    flex: 1;
+    padding: 30px;
+    min-width: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.header h1 {
+    font-size: 27px;
+}
+
+.header p {
+    color: #85899c;
+    margin-top: 6px;
+}
+
+.date {
+    color: #777c91;
+    font-size: 14px;
+}
+
+/* TARJETAS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 13px;
+    box-shadow: 0 3px 12px #00000008;
+}
+
+.stat-card p {
+    color: #85899c;
+    font-size: 14px;
+}
+
+.stat-card h2 {
+    font-size: 27px;
+    margin-top: 10px;
+}
+
+/* ZONA DE TAREAS */
+
+.workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(230px, 1fr);
+    gap: 20px;
+}
+
+.panel {
+    background: white;
+    padding: 23px;
+    border-radius: 13px;
+    box-shadow: 0 3px 12px #00000008;
+}
+
+.panel h2 {
+    font-size: 20px;
+    margin-bottom: 18px;
+}
+
+.search {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dddfea;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+.search:focus, input:focus, textarea:focus {
+    border-color: #8272df;
+}
+
+.add-form input,
+.add-form textarea,
+.add-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #dddfea;
+    border-radius: 8px;
+    outline: none;
+}
+
+.add-form textarea {
+    resize: vertical;
+    min-height: 65px;
+}
+
+.add-btn {
+    width: 100%;
+    padding: 12px;
+    background: #7767d9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.add-btn:hover {
+    background: #5e50bc;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 5px;
+    border-bottom: 1px solid #eeeef3;
+    cursor: pointer;
+}
+
+.task:hover {
+    background: #f9f8ff;
+}
+
+.task input {
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+}
+
+.task-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-info h3 {
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.task-info p {
+    font-size: 12px;
+    color: #9295a5;
+    margin-top: 5px;
+}
+
+.completed h3 {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.delete-btn {
+    background: #ffe9eb;
+    color: #df5364;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.priority {
+    font-size: 11px;
+    padding: 5px 8px;
+    border-radius: 15px;
+    background: #eeeaff;
+    color: #7767d9;
+}
+
+/* DETALLES */
+
+.detail-box {
+    background: #f7f6ff;
+    border-radius: 10px;
+    padding: 18px;
+    min-height: 140px;
+    margin-bottom: 20px;
+}
+
+.detail-box p {
+    color: #777c91;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.detail-box h3 {
+    margin-bottom: 12px;
+}
+
+.empty {
+    text-align: center;
+    color: #999;
+    padding: 25px 5px;
+}
+
+.filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.filters button {
+    border: none;
+    background: #f0eff8;
+    color: #69627f;
+    padding: 8px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.filters button.active {
+    background: #7767d9;
+    color: white;
+}
+
+/* CONFIGURACION */
+
+body.dark {
+    background: #1e2030;
+    color: #f4f4f8;
+}
+
+body.dark .panel,
+body.dark .stat-card {
+    background: #303248;
+    color: white;
+}
+
+body.dark .task {
+    border-color: #484b61;
+}
+
+body.dark .task:hover,
+body.dark .detail-box {
+    background: #3b3e57;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+    background: #303248;
+    color: white;
+    border-color: #555873;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 850px) {
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 600px) {
+    .app {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .menu-title {
+        display: none;
+    }
+
+    .menu button {
+        width: auto;
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .content {
+        padding: 17px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- MENU PRINCIPAL -->
+    <aside class="sidebar">
+
+        <div class="logo">Task<span>App</span> ✓</div>
+
+        <p class="menu-title">Menú principal</p>
+
+        <nav class="menu">
+            <button class="active" onclick="showSection('inicio', this)">⌂ Inicio</button>
+            <button onclick="showSection('tareas', this)">☑ Tareas</button>
+            <button onclick="showSection('requisitos', this)">▤ Requisitos</button>
+            <button onclick="showSection('configuracion', this)">⚙ Configuración</button>
+        </nav>
+
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="content">
+
+        <header class="header">
+            <div>
+                <h1 id="pageTitle">Mis tareas</h1>
+                <p>Organiza tus actividades de manera sencilla.</p>
+            </div>
+
+            <div class="date" id="currentDate"></div>
+        </header>
+
+        <!-- ESTADISTICAS -->
+        <section class="stats" id="stats">
+
+            <div class="stat-card">
+                <p>Total de tareas</p>
+                <h2 id="total">0</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Pendientes</p>
+                <h2 id="pending">0</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Completadas</p>
+                <h2 id="done">0</h2>
+            </div>
+
+        </section>
+
+        <!-- SECCION TAREAS -->
+        <section id="taskSection">
+
+            <div class="workspace">
+
+                <div class="panel">
+
+                    <h2>Lista de tareas</h2>
+
+                    <input
+                        type="text"
+                        id="search"
+                        class="search"
+                        placeholder="Buscar una tarea..."
+                        oninput="renderTasks()"
+                    >
+
+                    <div class="filters">
+                        <button class="active" onclick="setFilter('all', this)">Todas</button>
+                        <button onclick="setFilter('pending', this)">Pendientes</button>
+                        <button onclick="setFilter('done', this)">Completadas</button>
+                    </div>
+
+                    <div id="taskList">
+                        <p class="empty">Todavía no tienes tareas.</p>
+                    </div>
+
+                </div>
+
+                <div class="panel">
+
+                    <h2>Agregar tarea</h2>
+
+                    <form class="add-form" id="taskForm">
+
+                        <input
+                            type="text"
+                            id="taskName"
+                            placeholder="Nombre de la tarea"
+                            required
+                        >
+
+                        <textarea
+                            id="taskDescription"
+                            placeholder="Descripción de la actividad..."
+                        ></textarea>
+
+                        <select id="taskPriority">
+                            <option value="Normal">Prioridad normal</option>
+                            <option value="Alta">Prioridad alta</option>
+                            <option value="Baja">Prioridad baja</option>
+                        </select>
+
+                        <button class="add-btn" type="submit">
+                            + Agregar tarea
+                        </button>
+
+                    </form>
+
+                    <br>
+
+                    <h2>Detalles</h2>
+
+                    <div class="detail-box" id="details">
+                        <h3>Información</h3>
+                        <p>Selecciona una tarea para consultar sus detalles.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- REQUISITOS -->
+        <section id="requirementsSection" style="display:none">
+
+            <div class="panel">
+                <h2>Requisitos de la aplicación</h2>
+
+                <div class="detail-box">
+                    <h3>Objetivo</h3>
+                    <p>Permitir al usuario organizar sus actividades y llevar un control de sus tareas.</p>
+                </div>
+
+                <h3>Funciones principales</h3>
+                <br>
+                <p>✓ Agregar nuevas tareas.</p><br>
+                <p>✓ Consultar la información de cada tarea.</p><br>
+                <p>✓ Buscar tareas por su nombre.</p><br>
+                <p>✓ Marcar tareas como completadas.</p><br>
+                <p>✓ Eliminar tareas.</p><br>
+                <p>✓ Filtrar tareas pendientes y completadas.</p><br>
+
+                <h3>Requisitos no funcionales</h3>
+                <br>
+                <p>• Interfaz sencilla y fácil de utilizar.</p><br>
+                <p>• Diseño adaptable a celulares y computadores.</p><br>
+                <p>• Información guardada en el navegador.</p>
+            </div>
+
+        </section>
+
+        <!-- CONFIGURACION -->
+        <section id="settingsSection" style="display:none">
+
+            <div class="panel">
+                <h2>Configuración</h2>
+
+                <p>Personaliza la apariencia de tu aplicación.</p>
+                <br>
+
+                <button class="add-btn" onclick="toggleTheme()">
+                    Cambiar tema claro / oscuro
+                </button>
+
+                <br><br>
+
+                <button class="delete-btn" onclick="clearTasks()">
+                    Eliminar todas las tareas
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+// CARGAR TAREAS GUARDADAS
+let tasks = JSON.parse(localStorage.getItem("myTasks")) || [];
+
+let filter = "all";
+let selectedTask = null;
+
+// FECHA ACTUAL
+document.getElementById("currentDate").textContent =
+    new Date().toLocaleDateString("es-CO", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+
+// GUARDAR INFORMACION
+function saveTasks() {
+    localStorage.setItem("myTasks", JSON.stringify(tasks));
+}
+
+// AGREGAR TAREA
+document.getElementById("taskForm").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const name = document.getElementById("taskName").value.trim();
+    const description = document.getElementById("taskDescription").value.trim();
+    const priority = document.getElementById("taskPriority").value;
+
+    if (!name) return;
+
+    const newTask = {
+        id: Date.now(),
+        name: name,
+        description: description || "Sin descripción",
+        priority: priority,
+        completed: false
+    };
+
+    tasks.push(newTask);
+
+    saveTasks();
+    renderTasks();
+
+    document.getElementById("taskForm").reset();
+
+    selectTask(newTask.id);
+});
+
+// MOSTRAR TAREAS
+function renderTasks() {
+
+    const list = document.getElementById("taskList");
+    const search = document.getElementById("search").value.toLowerCase();
+
+    let filtered = tasks.filter(task => {
+
+        const matchesSearch = task.name.toLowerCase().includes(search);
+
+        const matchesFilter =
+            filter === "all" ||
+            (filter === "pending" && !task.completed) ||
+            (filter === "done" && task.completed);
+
+        return matchesSearch && matchesFilter;
+    });
+
+    list.innerHTML = "";
+
+    if (filtered.length === 0) {
+        list.innerHTML = '<p class="empty">No se encontraron tareas.</p>';
+    }
+
+    filtered.forEach(task => {
+
+        const item = document.createElement("div");
+
+        item.className = "task" + (task.completed ? " completed" : "");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.completed;
+
+        checkbox.addEventListener("click", function(e) {
+            e.stopPropagation();
+            toggleTask(task.id);
+        });
+
+        const info = document.createElement("div");
+        info.className = "task-info";
+
+        const title = document.createElement("h3");
+        title.textContent = task.name;
+
+        const subtitle = document.createElement("p");
+        subtitle.textContent = task.completed ? "Completada" : "Pendiente";
+
+        info.appendChild(title);
+        info.appendChild(subtitle);
+
+        const priority = document.createElement("span");
+        priority.className = "priority";
+        priority.textContent = task.priority;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-btn";
+        deleteButton.textContent = "✕";
+
+        deleteButton.addEventListener("click", function(e) {
+            e.stopPropagation();
+            deleteTask(task.id);
+        });
+
+        item.appendChild(checkbox);
+        item.appendChild(info);
+        item.appendChild(priority);
+        item.appendChild(deleteButton);
+
+        item.addEventListener("click", () => selectTask(task.id));
+
+        list.appendChild(item);
+    });
+
+    updateStats();
+}
+
+// ACTUALIZAR CONTADORES
+function updateStats() {
+
+    document.getElementById("total").textContent = tasks.length;
+
+    document.getElementById("pending").textContent =
+        tasks.filter(t => !t.completed).length;
+
+    document.getElementById("done").textContent =
+        tasks.filter(t => t.completed).length;
+}
+
+// SELECCIONAR TAREA
+function selectTask(id) {
+
+    selectedTask = id;
+
+    const task = tasks.find(t => t.id === id);
+
+    if (!task) return;
+
+    document.getElementById("details").innerHTML = "";
+
+    const title = document.createElement("h3");
+    title.textContent = task.name;
+
+    const description = document.createElement("p");
+    description.textContent = task.description;
+
+    const priority = document.createElement("p");
+    priority.textContent = "Prioridad: " + task.priority;
+
+    const status = document.createElement("p");
+    status.textContent = "Estado: " +
+        (task.completed ? "Completada" : "Pendiente");
+
+    document.getElementById("details").append(
+        title, description, priority, status
+    );
+}
+
+// COMPLETAR TAREA
+function toggleTask(id) {
+
+    tasks = tasks.map(task =>
+        task.id === id
+        ? {...task, completed: !task.completed}
+        : task
+    );
+
+    saveTasks();
+    renderTasks();
+
+    if (selectedTask === id) {
+        selectTask(id);
+    }
+}
+
+// ELIMINAR TAREA
+function deleteTask(id) {
+
+    tasks = tasks.filter(task => task.id !== id);
+
+    if (selectedTask === id) {
+        selectedTask = null;
+        document.getElementById("details").innerHTML =
+            "<h3>Información</h3><p>Selecciona una tarea para consultar sus detalles.</p>";
+    }
+
+    saveTasks();
+    renderTasks();
+}
+
+// FILTRAR TAREAS
+function setFilter(value, button) {
+
+    filter = value;
+
+    document.querySelectorAll(".filters button").forEach(btn =>
+        btn.classList.remove("active")
+    );
+
+    button.classList.add("active");
+
+    renderTasks();
+}
+
+// CAMBIAR SECCIONES
+function showSection(section, button) {
+
+    document.getElementById("taskSection").style.display = "none";
+    document.getElementById("requirementsSection").style.display = "none";
+    document.getElementById("settingsSection").style.display = "none";
+
+    document.getElementById("stats").style.display =
+        section === "inicio" || section === "tareas" ? "grid" : "none";
+
+    if (section === "inicio" || section === "tareas") {
+        document.getElementById("taskSection").style.display = "block";
+        document.getElementById("pageTitle").textContent =
+            section === "inicio" ? "Mis tareas" : "Todas mis tareas";
+    }
+
+    if (section === "requisitos") {
+        document.getElementById("requirementsSection").style.display = "block";
+        document.getElementById("pageTitle").textContent = "Requisitos";
+    }
+
+    if (section === "configuracion") {
+        document.getElementById("settingsSection").style.display = "block";
+        document.getElementById("pageTitle").textContent = "Configuración";
+    }
+
+    document.querySelectorAll(".menu button").forEach(btn =>
+        btn.classList.remove("active")
+    );
+
+    button.classList.add("active");
+}
+
+// CAMBIAR TEMA
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "darkMode",
+        document.body.classList.contains("dark")
+    );
+}
+
+// ELIMINAR TODAS LAS TAREAS
+function clearTasks() {
+
+    if (confirm("¿Seguro que quieres eliminar todas las tareas?")) {
+
+        tasks = [];
+        selectedTask = null;
+
+        saveTasks();
+        renderTasks();
+
+        document.getElementById("details").innerHTML =
+            "<h3>Información</h3><p>No hay tareas seleccionadas.</p>";
+    }
+}
+
+// INICIAR APLICACIÓN
+if (localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark");
+}
+
+renderTasks();
+
+</script>
+
+</body>
+</html>
